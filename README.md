@@ -57,26 +57,88 @@ Elements are intelligently categorized and included based on importance:
 
 ## 🛠️ Installation & Usage
 
-### 1. Install Dependencies
+### Quick Setup for Claude Code (Recommended)
+
+#### Option 1: Automated Setup
 ```bash
-npm install
+# Clone the repository
+git clone https://github.com/The-Thought-Magician/enhanced-browser-mcp.git
+cd enhanced-browser-mcp
+
+# Run the automated installation script
+./install.sh
+
+# Automatically configure Claude Code
+node setup-claude-code.js
 ```
 
-### 2. Build the Enhanced Server
+#### Option 2: Manual Setup
+
+**Step 1: Install and Build**
 ```bash
+git clone https://github.com/The-Thought-Magician/enhanced-browser-mcp.git
+cd enhanced-browser-mcp
+npm install
 npm run build
 ```
 
-### 3. Use with Your MCP Client
-The enhanced server is a drop-in replacement for the original BrowserMCP server:
+**Step 2: Configure Claude Code MCP**
 
-```bash
-# Use the built server
-./dist/index.js
+Add the following to your Claude Code configuration file:
+
+- **Linux/Mac**: `~/.config/claude-code/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "enhanced-browser-mcp": {
+      "command": "node",
+      "args": ["/path/to/enhanced-browser-mcp/dist/index.js"],
+      "env": {
+        "BROWSER_WS_ENDPOINT": "ws://localhost:8080/ws"
+      }
+    }
+  }
+}
 ```
 
-### 4. Browser Extension (Optional)
-The original browser extension works without modifications. Our changes are entirely server-side.
+**Step 3: Install Browser Extension**
+1. Open Chrome and go to `chrome://extensions/`
+2. Enable "Developer mode" in the top right
+3. Click "Load unpacked" and select the `browser-mcp-extension` folder
+4. The extension will start automatically
+
+**Step 4: Restart Claude Code**
+Restart Claude Code to load the enhanced MCP server.
+
+### Verification
+
+Once installed, you can verify the setup by asking Claude Code to:
+```
+Take a screenshot of the current browser tab
+```
+
+If successful, you'll see the enhanced token compression in action!
+
+### Manual Usage (Advanced Users)
+
+#### Direct Server Usage
+```bash
+# Start the enhanced server directly
+node dist/index.js
+```
+
+#### Custom Configuration
+You can customize compression settings by modifying `src/utils/aria-snapshot.ts`:
+
+```typescript
+const COMPRESSION_CONFIG = {
+  form: { maxTokens: 8000, priority: ['textbox', 'button', 'combobox'] },
+  navigation: { maxTokens: 12000, priority: ['link', 'button', 'heading'] },
+  interaction: { maxTokens: 15000, priority: ['button', 'link', 'textbox'] }
+};
+```
 
 ## 📊 Performance Comparison
 
@@ -135,6 +197,65 @@ function analyzeElements(snapshot)
 
 // Intelligent compression
 function createIntelligentSnapshot(snapshot, config, url)
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Issue: "MCP tool browser_navigate response exceeds maximum allowed tokens"**
+- ✅ **Fixed**: This is the exact problem our enhancement solves! The enhanced version automatically compresses responses.
+
+**Issue: Claude Code doesn't detect the MCP server**
+```bash
+# Check your configuration file location:
+# Linux/Mac: ~/.config/claude-code/claude_desktop_config.json  
+# Windows: %APPDATA%\Claude\claude_desktop_config.json
+
+# Verify the path to dist/index.js is correct
+# Use absolute paths for best results
+```
+
+**Issue: Browser extension not connecting**
+```bash
+# Ensure the WebSocket endpoint is correct:
+# Default: ws://localhost:8080/ws
+
+# Check if port 8080 is available:
+lsof -i :8080  # Linux/Mac
+netstat -an | find "8080"  # Windows
+```
+
+**Issue: "Command not found: node"**
+```bash
+# Install Node.js first:
+# https://nodejs.org/
+
+# Verify installation:
+node --version
+npm --version
+```
+
+### Performance Optimization
+
+**For Heavy Websites (Enterprise Apps)**
+```typescript
+// Increase compression for complex sites
+const AGGRESSIVE_CONFIG = {
+  form: { maxTokens: 6000, priority: ['textbox', 'button'] },
+  navigation: { maxTokens: 8000, priority: ['link', 'button'] },
+  interaction: { maxTokens: 10000, priority: ['button', 'textbox'] }
+};
+```
+
+**For Simple Websites (Static Pages)**
+```typescript
+// Lighter compression for simple sites
+const LIGHT_CONFIG = {
+  form: { maxTokens: 12000, priority: ['textbox', 'button', 'combobox'] },
+  navigation: { maxTokens: 18000, priority: ['link', 'button', 'heading'] },
+  interaction: { maxTokens: 20000, priority: ['button', 'link', 'textbox'] }
+};
 ```
 
 ## Original Browser MCP Features

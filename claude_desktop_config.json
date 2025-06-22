@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "enhanced-browser-mcp": {
+      "command": "node",
+      "args": ["/path/to/enhanced-browser-mcp/dist/index.js"],
+      "env": {
+        "BROWSER_WS_ENDPOINT": "ws://localhost:8080/ws"
+      }
+    }
+  }
+}
