@@ -706,12 +706,26 @@ var selectOption = {
 
 // package.json
 var package_default = {
-  name: "@browsermcp/mcp",
-  version: "0.1.3",
-  description: "MCP server for browser automation using Browser MCP",
-  author: "Browser MCP",
-  homepage: "https://browsermcp.io",
-  bugs: "https://github.com/browsermcp/mcp/issues",
+  name: "enhanced-browser-mcp",
+  version: "1.0.0",
+  description: "Revolutionary AI-Powered Token Limit Solution for Universal Web Automation - Enhanced version of BrowserMCP",
+  author: "Chiranjeet Mishra <chiranjeetmishra13@gmail.com>",
+  homepage: "https://github.com/The-Thought-Magician/enhanced-browser-mcp",
+  bugs: "https://github.com/The-Thought-Magician/enhanced-browser-mcp/issues",
+  repository: {
+    type: "git",
+    url: "https://github.com/The-Thought-Magician/enhanced-browser-mcp.git"
+  },
+  keywords: [
+    "mcp",
+    "browser-automation",
+    "claude-code",
+    "token-compression",
+    "ai-powered",
+    "web-automation",
+    "accessibility",
+    "gmail-automation"
+  ],
   type: "module",
   bin: {
     "mcp-server-browsermcp": "dist/index.js"
@@ -725,7 +739,11 @@ var package_default = {
     prepare: "npm run build",
     postinstall: "npm run build",
     watch: "tsup src/index.ts --format esm --watch ",
-    inspector: "CLIENT_PORT=9001 SERVER_PORT=9002 pnpx @modelcontextprotocol/inspector node dist/index.js"
+    inspector: "CLIENT_PORT=9001 SERVER_PORT=9002 pnpx @modelcontextprotocol/inspector node dist/index.js",
+    "setup-claude": "node setup-claude-code.js",
+    start: "node dist/index.js",
+    "install-extension": "echo 'Please manually load browser-mcp-extension folder as unpacked extension in Chrome'",
+    verify: "echo 'Enhanced Browser MCP v1.0.0 - Ready for universal web automation!'"
   },
   dependencies: {
     "@modelcontextprotocol/sdk": "^1.8.0",

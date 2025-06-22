@@ -5,9 +5,13 @@
  * Automatically configures Enhanced Browser MCP for Claude Code
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function getClaudeConfigPath() {
   const platform = os.platform();
@@ -35,7 +39,7 @@ function ensureDirectoryExists(filePath) {
 function updateClaudeConfig() {
   try {
     const configPath = getClaudeConfigPath();
-    const currentDir = process.cwd();
+    const currentDir = __dirname;
     const indexPath = path.join(currentDir, 'dist', 'index.js');
     
     // Ensure the config directory exists
@@ -91,7 +95,7 @@ function updateClaudeConfig() {
       mcpServers: {
         'enhanced-browser-mcp': {
           command: 'node',
-          args: [path.join(process.cwd(), 'dist', 'index.js')],
+          args: [path.join(__dirname, 'dist', 'index.js')],
           env: {
             BROWSER_WS_ENDPOINT: 'ws://localhost:8080/ws'
           }
@@ -102,10 +106,8 @@ function updateClaudeConfig() {
 }
 
 // Check if this is being run directly
-if (require.main === module) {
-  console.log('🔧 Setting up Enhanced Browser MCP for Claude Code...');
-  console.log('');
-  updateClaudeConfig();
-}
+console.log('🔧 Setting up Enhanced Browser MCP for Claude Code...');
+console.log('');
+updateClaudeConfig();
 
-module.exports = { updateClaudeConfig, getClaudeConfigPath };
+export { updateClaudeConfig, getClaudeConfigPath };
